@@ -1,0 +1,37 @@
+.container {
+  width: auto;
+  height: 175px;
+  background: #000;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.logo {
+  width: 250px;
+  height: 110px;
+  margin-left: 10px;
+}
+
+.word_container {
+  color: #fff;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.nav_container {
+  display: flex;
+  width: auto;
+  height: auto;
+  align-items: center;
+  color: #fff;
+  gap: 40px;
+  margin-right: 50px;
+}
+
+.nav_container p:hover {
+  font-weight: bold;
+}

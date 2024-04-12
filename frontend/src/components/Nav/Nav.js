@@ -13,8 +13,8 @@ function Nav() {
       </div>
       <div className={styles.nav_container}>
         <p>서비스 소개</p>
-        <p>이용 안내</p>
-        <p>기사 생성</p>
+        <p>이용안내</p>
+        <p>기사생성</p>
       </div>
     </div>
   );
