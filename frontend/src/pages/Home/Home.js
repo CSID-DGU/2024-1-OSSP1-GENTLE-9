@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./Home.module.css";
+import { Link } from "react-router-dom";
 
 function Home() {
   return (
@@ -13,9 +14,11 @@ function Home() {
           <br />N<span className={styles.highlight}>E</span>WS SERVICE
         </p>
       </div>
-      <div className={styles.button}>
-        <p>기사 생성하기</p>
-      </div>
+      <Link to="/create" style={{ textDecoration: "none", color: "black" }}>
+        <div className={styles.button}>
+          <p>기사 생성하기</p>
+        </div>
+      </Link>
     </div>
   );
 }
