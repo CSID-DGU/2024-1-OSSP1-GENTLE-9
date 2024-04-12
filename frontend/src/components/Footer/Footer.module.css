@@ -16,7 +16,7 @@
 
 .word_container {
   color: #fff;
-  font-size: 16px;
+  font-size: 12px;
   display: flex;
   align-items: center;
   flex-direction: column;
