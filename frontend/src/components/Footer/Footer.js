@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./Footer.module.css";
+import { Link } from "react-router-dom";
 
 function Footer() {
   return (
@@ -12,9 +13,15 @@ function Footer() {
         <p>© 2024 GENTLE. All rights reserved.</p>
       </div>
       <div className={styles.nav_container}>
-        <p>서비스 소개</p>
-        <p>이용안내</p>
-        <p>기사생성</p>
+        <Link to="/intro" style={{ textDecoration: "none", color: "#fff" }}>
+          <p>서비스 소개</p>
+        </Link>
+        <Link to="/userguide" style={{ textDecoration: "none", color: "#fff" }}>
+          <p>이용안내</p>
+        </Link>
+        <Link to="/create" style={{ textDecoration: "none", color: "#fff" }}>
+          <p>기사생성</p>
+        </Link>
       </div>
     </div>
   );
