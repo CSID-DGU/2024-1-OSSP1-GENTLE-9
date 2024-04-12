@@ -12,6 +12,7 @@
 .nav_logo {
   width: 167px;
   height: 71px;
+  padding-left: 10px;
 }
 
 .nav_container {
@@ -22,8 +23,9 @@
   color: black;
   gap: 40px;
   padding-right: 70px;
+  font-size: 18px;
 }
 
-p:hover {
+.nav_container p:hover {
   font-weight: bold;
 }
