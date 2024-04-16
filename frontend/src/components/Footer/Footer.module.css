@@ -33,5 +33,6 @@
 }
 
 .nav_container p:hover {
-  font-weight: bold;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
 }

@@ -42,12 +42,17 @@ function Intro() {
             추출하고, 이를 바탕으로 언론사의 정치적 성향을 분석합니다. 분석을
             제공하는 언론사는 다음과 같습니다.
           </p>
-          <img src="/news1.png" alt="조선일보" />
-          <img src="/news2.png" alt="중앙일보" />
-          <img src="/news3.png" alt="한겨레" />
-          <img src="/news4.png" alt="경향신문" />
-          <img src="/news5.png" alt="서울신문" />
-          <img src="/news6.png" alt="한국일보" />
+          <div className={styles.image_container}>
+            <img src="/news1.png" alt="조선일보" />
+            <img src="/news2.png" alt="중앙일보" />
+            <img src="/news3.png" alt="한겨레" />
+          </div>
+          <div className={styles.image_container}>
+            <img src="/news4.png" alt="경향신문" />
+            <img src="/news5.png" alt="서울신문" />
+            <img src="/news6.png" alt="한국일보" />
+          </div>
+
           <p className={styles.intro}>
             <b>2. 기사 분석 기능</b> : 입력된 URL에 해당하는 뉴스 기사 본문을
             추출하고, 이를 요약 및 분석하여 제공합니다.
