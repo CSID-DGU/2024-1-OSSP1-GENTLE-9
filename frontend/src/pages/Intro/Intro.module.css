@@ -68,3 +68,10 @@
   font-size: 16px;
   line-height: 2;
 }
+
+.image_container{
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+  width:100%;
+}
