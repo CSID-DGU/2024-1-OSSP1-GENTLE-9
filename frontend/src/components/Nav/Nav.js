@@ -8,7 +8,7 @@ function Nav() {
       <div className={styles.nav_logo}>
         <Link to="/">
           <img
-            src="gentle_logo_b.png"
+            src="/gentle_logo_b.png"
             className={styles.nav_logo}
             alt="logo_black"
           />
@@ -27,7 +27,13 @@ function Nav() {
         <Link to="/create" style={{ textDecoration: "none", color: "black" }}>
           <p>기사생성</p>
         </Link>
+        <Link to="/user" style={{ textDecoration: "none", color: "black" }}>
+          <p>마이페이지</p>
+        </Link>
       </div>
+      <Link to="/create" style={{ textDecoration: "none", color: "black" }}>
+        <p className={styles.login}>로그인</p>
+      </Link>
     </div>
   );
 }

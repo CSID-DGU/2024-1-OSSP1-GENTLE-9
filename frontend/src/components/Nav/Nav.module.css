@@ -29,3 +29,10 @@
 .nav_container p:hover {
   font-weight: bold;
 }
+
+.login {
+  margin-right: 30px;
+}
+.login:hover {
+  font-weight: bold;
+}
