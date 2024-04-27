@@ -32,7 +32,7 @@
   text-align: center;
 }
 .content_wrapper {
-  width: 60%;
+  width: 986px;
   height: 80%;
   display: flex;
   flex-direction: column;
@@ -69,9 +69,9 @@
   line-height: 2;
 }
 
-.image_container{
-  display:flex;
+.image_container {
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  width:100%;
+  width: 100%;
 }

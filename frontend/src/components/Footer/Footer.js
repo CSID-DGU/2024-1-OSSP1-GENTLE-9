@@ -6,7 +6,7 @@ function Footer() {
   return (
     <div className={styles.container}>
       <div>
-        <img className={styles.logo} src="gentle_logo_w.png" alt="logo_w" />
+        <img className={styles.logo} src="/gentle_logo_w.png" alt="logo_w" />
       </div>
       <div className={styles.word_container}>
         <p>Contact: gentle@gmail.com</p>

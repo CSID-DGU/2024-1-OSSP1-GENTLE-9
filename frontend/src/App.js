@@ -5,6 +5,7 @@ import UserGuide from "./pages/UserGuide/UserGuide.js";
 import Create from "./pages/Create/Create.js";
 import Result from "./pages/Result/Result.js";
 import Creating from "./pages/Creating/Creating.js";
+import User from "./pages/User/User.js";
 import Nav from "./components/Nav/Nav.js";
 import Footer from "./components/Footer/Footer.js";
 function App() {
@@ -17,7 +18,8 @@ function App() {
         <Route path="/userguide" element={<UserGuide />} />
         <Route path="/create" element={<Create />} />
         <Route path="/creating" element={<Creating />} />
-        <Route path="/result" element={<Result />} />
+        <Route path="/result/:id" element={<Result />} />
+        <Route path="/user" element={<User />} />
       </Routes>
       <Footer />
     </Router>

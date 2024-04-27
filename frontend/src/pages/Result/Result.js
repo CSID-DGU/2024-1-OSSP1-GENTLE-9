@@ -1,30 +1,31 @@
 import styles from "./Result.module.css";
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import useArticleData from "../../hooks/useArticleData";
 
 function Result() {
-  const [imageSrc, setImageSrc] = useState("/star_g.png");
-  const [contentData, setContentData] = useState({
-    date: "",
-    title: "",
-    summary: "",
-  });
-
-  // 스크랩 별 클릭 시 호출
-  const handleImageClick = () => {
-    setImageSrc((currentSrc) =>
-      currentSrc === "/star_g.png" ? "/star_y.png" : "/star_g.png"
-    );
-  };
-
+  const { id } = useParams(); // URL 파라미터에서 id를 가져옵니다.
+  const article = useArticleData(id);
+  const [isscrape, setIsscrape] = useState(article ? article.isscrape : 0);
+  const [imageSrc, setImageSrc] = useState(
+    isscrape === 0 ? "/star_g.png" : "/star_y.png"
+  );
   useEffect(() => {
-    async function fetchData() {
-      const response = await fetch("/data.json");
-      const data = await response.json();
-      setContentData(data);
+    if (article) {
+      setIsscrape(article.isscrape);
+      setImageSrc(article.isscrape === 0 ? "/star_g.png" : "/star_y.png");
     }
+  }, [article]);
 
-    fetchData();
-  }, []);
+  const handleImageClick = () => {
+    const newScrapeValue = isscrape === 1 ? 0 : 1;
+    setIsscrape(newScrapeValue);
+    setImageSrc(newScrapeValue === 0 ? "/star_g.png" : "/star_y.png");
+  };
+  if (!article) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className={styles.container_wrapper}>
       <div className={styles.container}>
@@ -34,7 +35,7 @@ function Result() {
         <div className={styles.middle}>
           <div className={styles.date}>
             <img src="/date.png" alt="date" />
-            <p>{contentData.date}</p>
+            <p>{article.date}</p>
           </div>
           <img
             src={imageSrc}
@@ -46,8 +47,8 @@ function Result() {
         <hr />
         <div className={styles.contents}>
           <div className={styles.content_left}>
-            <p className={styles.title_main}>{contentData.title}</p>
-            <p className={styles.summary}>{contentData.summary}</p>
+            <p className={styles.title_main}>{article.title}</p>
+            <p className={styles.summary}>{article.summary}</p>
           </div>
           <div className={styles.content_right}>
             <div className={styles.title}>언론사별 성향 분석표</div>
