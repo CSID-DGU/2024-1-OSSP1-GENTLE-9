@@ -1,4 +1,3 @@
-from django.db import models
 from multiprocessing import context
 from django.shortcuts import render, HttpResponse
 import requests
@@ -6,6 +5,7 @@ from bs4 import BeautifulSoup
 from summarizer import Summarizer
 import nltk
 from transformers import BertTokenizer, BertModel
+from sentence_transformers import SentenceTransformer
 import torch
 from nltk.tokenize import sent_tokenize
 from wordcloud import WordCloud
@@ -19,8 +19,13 @@ import jpype
 import io
 import matplotlib.pyplot as plt
 # Create your views here.
+import mysql.connector
+from PIL import Image
+import io
+import os
 
 newscontext = " "
+f_id_number = 1
 
 def index(request):
     return render(request, 'runningpy/base.html')
@@ -49,31 +54,24 @@ def calculate(request):
     except Exception as e:
         return f"An error occurred: {e}"
 
-'''
-def calculate(request):
-    if request.method == 'POST':
-        number1 = request.POST.get('n1')
-        
-    return HttpResponse('결과 : ' + str(result))
-'''
-#def summarize(request):
     
 def result(request):
     return HttpResponse('''''')
 
 
 def summarize(request):
-    model_name = "google/bert_uncased_L-4_H-256_A-4"
+    '''model_name = "google/bert_uncased_L-8_H-512_A-8"
     tokenizer = BertTokenizer.from_pretrained(model_name)
-    model = BertModel.from_pretrained(model_name)
-
+    model = BertModel.from_pretrained(model_name)'''
+    model_name = 'sentence-transformers/bert-base-nli-mean-tokens'
+    model = SentenceTransformer(model_name)
 # 문장별로 처리
     sentences = sent_tokenize(newscontext)
 
     if len(sentences) < 3:
         return HttpResponse("Not enough sentences to summarize.")
     
-    sentence_embeddings = []
+    '''sentence_embeddings = []
     for sentence in sentences:
         encoded_input = tokenizer(sentence, return_tensors='pt', max_length=512, truncation=True)
         with torch.no_grad():
@@ -82,36 +80,88 @@ def summarize(request):
         sentence_embeddings.append(sentence_embedding)
 
 # 문장 중요도 계산
-    sentence_scores = torch.cat(sentence_embeddings, dim=0)
+    sentence_scores = torch.cat(sentence_embeddings, dim=0)'''
+    # 문장 임베딩
+    sentence_embeddings = model.encode(sentences)
+
+    # 문장 중요도 계산
+    sentence_embeddings = torch.tensor(sentence_embeddings)
     k = min(3, len(sentences)) 
-    important_sentence_indices = torch.topk(torch.norm(sentence_scores, dim=1), k).indices
+    important_sentence_indices = torch.topk(torch.norm(sentence_embeddings, dim=1), k).indices
 
 # 중요한 문장 출력
     result = " "
     important_sentences = [sentences[index] for index in important_sentence_indices]
     for sentence in important_sentences:
-        result += sentence
+        result += sentence + " "
+    
     return HttpResponse(result)
 
 
 
+########################################################################################################
+
+#로컬 DB에 연동
+def create_db_connection():
+    return mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='1234',
+        database='project_db'
+    )
+
+def upload_image_from_buffer(fid, buffer, file_name, format):#db에 이미지 업로드
+    conn = create_db_connection()
+    cursor = conn.cursor()
+    
+    # 이미지 속성 얻기
+    img_byte_arr = io.BytesIO(buffer)
+    img = Image.open(img_byte_arr)
+    img_width, img_height = img.size
+    file_size = len(buffer)
+    
+    # SQL 쿼리 준비
+    sql = """INSERT INTO cloud_table (f_id, fname, extname, fsize, f_width, f_height, f_data) 
+             VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+    values = (fid, file_name, format, file_size, img_width, img_height, buffer)#순서대로 기본키, 이름, png인지 jpg인지, 용량, 넓이, 높이, 몰라
+    
+    # 실행 및 커밋
+    cursor.execute(sql, values)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    print("이미지가 성공적으로 업로드 되었습니다!")
+
+def download_image(file_id, output_path):
+    conn = create_db_connection()
+    cursor = conn.cursor()
+    
+    # 이미지 검색을 위한 SQL
+    sql = "SELECT fname, extname, f_data FROM cloud_table WHERE f_id = %s"
+    cursor.execute(sql, (file_id,))
+    file_name, extension, img_data = cursor.fetchone()
+    
+    # 다운로드할 경로 확인 및 생성
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)  # 경로가 없으면 생성
+    
+    # 파일로 이미지 데이터 쓰기
+    full_path = os.path.join(output_path, file_name)
+    with open(full_path, 'wb') as f:
+        f.write(img_data)
+    
+    cursor.close()
+    conn.close()
+
+    print(f"{output_path}/{file_name}에 이미지가 성공적으로 다운로드 되었습니다.")
+
+###########################################################################################
+
 
 def _wordcloud(request):
-    least_num = 2#3번 이상 호출된 단어만 워드 클라우드에 출력
+    least_num = 2#2번 이상 호출된 단어만 워드 클라우드에 출력
     
-#    temp_save_dirc = 'C:\\Users\\kpukpu\\Desktop'
-
-#저장 주소 처리
-#    save_empty_list = []
-#    save_empty_str = ""
-#    for i in temp_save_dirc:
-#        if(i == "\\"):
-#            i = '/'
-#            save_empty_list.append(i)
-#        else:
-#            save_empty_list.append(i)
-#   real_save_dirc = save_empty_str.join(save_empty_list)
-#    real_save_dirc = real_save_dirc + "/Word_cloud.png"
 
 #matplotlib 대화형 모드 켜기
     plt.ion()
@@ -129,7 +179,7 @@ def _wordcloud(request):
 # 위에서 얻은 words를 처리하여 단어별 빈도수 형태의 딕셔너리 데이터를 구함
     c = Counter(words)
 
-
+    print(c)
 #최소 빈도수 처리
     key = list(c.keys())
     for a in key:
@@ -145,11 +195,19 @@ def _wordcloud(request):
 #워드클라우드 만들기
     wc = WordCloud(background_color="white" ,  font_path=r"C:/Windows/Fonts/malgun.ttf", width=600, height=600, scale=2.0, max_font_size=250)
     gen = wc.generate_from_frequencies(c)
-#    plt.figure()
-#    plt.imshow(gen)
+
     buffer = io.BytesIO()
+
     gen.to_image().save(buffer, format='PNG')
     buffer.seek(0)
-#파일로 저장 
-    
+
+    global f_id_number#기본키
+    img_byte_arr = buffer.getvalue()
+    upload_image_from_buffer(f_id_number, img_byte_arr, 'bluIe_image.jpg', 'PNG')
+    f_id_number += 1#기본키를 1씩 증가 시켜 기본키의 중복을 방지한다.
+
+
+    file_id_to_download = 1  # 데이터베이스에서 다운로드할 이미지의 파일 ID
+    download_path = "downloadimage"  # 이미지를 저장할 경로
+    download_image(file_id_to_download, download_path)
     return HttpResponse(buffer.getvalue(), content_type='image/png')
