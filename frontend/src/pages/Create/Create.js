@@ -1,7 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./Create.module.css";
-import { Link } from "react-router-dom";
+
 function Create() {
+  const navigate = useNavigate();
+  const [url, setUrl] = useState("");
+
+  // URL 입력 변경 시 호출되는 함수
+  const handleInputChange = (event) => {
+    setUrl(event.target.value);
+  };
+
+  // URL 전송 로직
+  const handleSendClick = () => {
+    fetch("/api/analysis", {
+      //해당 페이지로 url 전송
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ url: url }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          navigate("/creating");
+        } else {
+          console.error("Failed to send URL");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.imageContainer}>
@@ -14,9 +45,11 @@ function Create() {
         <div className={styles.input_container}>
           <input
             className={styles.input}
-            defaultValue="https://news.gentle.co.kr/news/article"
+            value={url}
+            onChange={handleInputChange}
+            placeholder="기사 URL 입력"
           />
-          <img src="/send.png" alt="send" />
+          <img src="/send.png" alt="send" onClick={handleSendClick} />
         </div>
       </div>
     </div>
