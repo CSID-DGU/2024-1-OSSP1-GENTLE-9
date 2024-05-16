@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import styles from "./Create.module.css";
 
 function Create() {
@@ -13,16 +14,10 @@ function Create() {
 
   // URL 전송 로직
   const handleSendClick = () => {
-    fetch("/api/analysis", {
-      //해당 페이지로 url 전송
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ url: url }),
-    })
+    axios
+      .post("/api/analysis", { url: url })
       .then((response) => {
-        if (response.ok) {
+        if (response.status === 200) {
           navigate("/creating");
         } else {
           console.error("Failed to send URL");
