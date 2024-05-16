@@ -32,7 +32,9 @@
 
 .login {
   margin-right: 30px;
+  color: black;
 }
 .login:hover {
   font-weight: bold;
+  cursor: pointer;
 }

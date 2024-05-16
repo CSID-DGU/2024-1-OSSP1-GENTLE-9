@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import styles from "./Nav.module.css";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../contexts/Auth.js";
 
 function Nav() {
+  const { user, login, logout } = useContext(AuthContext);
   return (
     <div className={styles.container}>
       <div className={styles.nav_logo}>
@@ -31,9 +33,17 @@ function Nav() {
           <p>마이페이지</p>
         </Link>
       </div>
-      <Link to="/create" style={{ textDecoration: "none", color: "black" }}>
-        <p className={styles.login}>로그인</p>
-      </Link>
+      {user ? (
+        <div>
+          <p onClick={logout} className={styles.login}>
+            로그아웃
+          </p>
+        </div>
+      ) : (
+        <p onClick={login} className={styles.login}>
+          로그인
+        </p>
+      )}
     </div>
   );
 }

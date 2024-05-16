@@ -1,24 +1,39 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
-function useArticleData(id) {
+const useArticleData = (id) => {
   const [article, setArticle] = useState(null);
 
   useEffect(() => {
-    async function fetchData() {
-      // /data.json에서 모든 기사 데이터를 가져옵니다.
-      const response = await fetch("/data.json");
-      const articles = await response.json();
-      // id에 해당하는 기사를 찾아 상태를 설정합니다.
-      const foundArticle = articles.find(
-        (article) => article.id.toString() === id
-      );
-      setArticle(foundArticle);
-    }
+    const fetchArticle = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/articles/${id}`
+        );
+        const data = response.data;
 
-    fetchData();
+        // 이미지 데이터를 Base64로 디코딩하여 추가
+        const cloudImage = data.cloud
+          ? `data:image/png;base64,${data.cloud}`
+          : null;
+        const analysisImage = data.analysis
+          ? `data:image/png;base64,${data.analysis}`
+          : null;
+
+        setArticle({
+          ...data,
+          cloud: cloudImage,
+          analysis: analysisImage,
+        });
+      } catch (error) {
+        console.error("Error fetching article:", error);
+      }
+    };
+
+    fetchArticle();
   }, [id]);
 
   return article;
-}
+};
 
 export default useArticleData;

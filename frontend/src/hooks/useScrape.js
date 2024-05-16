@@ -1,23 +1,41 @@
 import { useState } from "react";
+import axios from "axios";
 
-function useScrape(initialScrape) {
-  const [isscrape, setIsscrape] = useState(initialScrape);
+const useScrape = (initialScrapeStatus, articleId) => {
+  const [isScraped, setIsScraped] = useState(initialScrapeStatus);
+  const [starImage, setStarImage] = useState(
+    initialScrapeStatus ? "/star_y.png" : "/star_g.png"
+  );
 
-  const toggleScrape = (articleId) => {
-    const newScrapeValue = isscrape === 1 ? 0 : 1;
-    fetch(`/api/articles/${articleId}/scrape`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ isscrape: newScrapeValue }),
-    })
-      .then((response) => response.json())
-      .then(() => {
-        setIsscrape(newScrapeValue);
-      })
-      .catch((error) => console.error("Error updating scrape status:", error));
+  const toggleScrape = () => {
+    const newScrapeStatus = !isScraped;
+    setIsScraped(newScrapeStatus);
+    setStarImage(newScrapeStatus ? "/star_y.png" : "/star_g.png");
+
+    if (newScrapeStatus) {
+      // 스크랩 추가
+      axios
+        .post("/api/scrape", { articleId })
+        .then((response) => {
+          console.log("Scrape added:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error adding scrape:", error);
+        });
+    } else {
+      // 스크랩 삭제
+      axios
+        .delete(`/api/scrape/${articleId}`)
+        .then((response) => {
+          console.log("Scrape removed:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error removing scrape:", error);
+        });
+    }
   };
 
-  return [isscrape, toggleScrape];
-}
+  return { isScraped, starImage, toggleScrape };
+};
 
 export default useScrape;
