@@ -1,27 +1,24 @@
 import styles from "./Result.module.css";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useArticleData from "../../hooks/useArticleData";
+import useScrape from "../../hooks/useScrape";
 
 function Result() {
   const { id } = useParams(); // URL 파라미터에서 id를 가져옵니다.
   const article = useArticleData(id);
-  const [isscrape, setIsscrape] = useState(article ? article.isscrape : 0);
-  const [imageSrc, setImageSrc] = useState(
-    isscrape === 0 ? "/star_g.png" : "/star_y.png"
+  const { isScraped, starImage, toggleScrape } = useScrape(
+    article ? article.isscrape : 0,
+    id
   );
+
   useEffect(() => {
     if (article) {
-      setIsscrape(article.isscrape);
-      setImageSrc(article.isscrape === 0 ? "/star_g.png" : "/star_y.png");
+      // article 데이터가 변경될 때마다 isScraped 상태를 업데이트합니다.
+      toggleScrape(article.isscrape);
     }
   }, [article]);
 
-  const handleImageClick = () => {
-    const newScrapeValue = isscrape === 1 ? 0 : 1;
-    setIsscrape(newScrapeValue);
-    setImageSrc(newScrapeValue === 0 ? "/star_g.png" : "/star_y.png");
-  };
   if (!article) {
     return <div>Loading...</div>;
   }
@@ -38,9 +35,9 @@ function Result() {
             <p>{article.date}</p>
           </div>
           <img
-            src={imageSrc}
+            src={starImage}
             alt="star"
-            onClick={handleImageClick}
+            onClick={toggleScrape}
             style={{ cursor: "pointer" }}
           />
         </div>
@@ -52,9 +49,17 @@ function Result() {
           </div>
           <div className={styles.content_right}>
             <div className={styles.title}>언론사별 성향 분석표</div>
-            <img className={styles.image1} src="/result.png" alt="result" />
+            {article.analysis && (
+              <img
+                className={styles.image1}
+                src={article.analysis}
+                alt="analysis"
+              />
+            )}
             <div className={styles.title}>워드 클라우드</div>
-            <img className={styles.image1} src="/cloud.png" alt="cloud" />
+            {article.cloud && (
+              <img className={styles.image1} src={article.cloud} alt="cloud" />
+            )}
           </div>
         </div>
       </div>
