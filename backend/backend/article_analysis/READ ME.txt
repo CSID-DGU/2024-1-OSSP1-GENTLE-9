@@ -1,0 +1,5 @@
+connectreact << 이 폴더는 볼 필요 없음 그냥 내가 실험용으로 끄적였던 코드였고 어차피 내용물 날라갔음
+
+pytest/settings.py 보면 INSTALLED_APPS 구조체에 'rest_framework' 가 추가 되었는 데 이게 react랑 연동할때 필요하다고 함
+
+runningpy/views.py 코드 중 원래 calcluate 함수가 result로 변경됨 함수 실행 시 output으로 json파일이 저장되도록 수정했음 결과물 json 파일은 pytest/news_data.json 참고 

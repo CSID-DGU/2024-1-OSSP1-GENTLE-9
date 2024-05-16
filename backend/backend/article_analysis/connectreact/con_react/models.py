@@ -1,9 +1,6 @@
 from django.db import models
 
-# Create your models here.
-
-class newsurl(models.Model):
-    n_link = models.URLField
+from django.db import models
 
 class Article(models.Model):
     user_id = models.IntegerField()
