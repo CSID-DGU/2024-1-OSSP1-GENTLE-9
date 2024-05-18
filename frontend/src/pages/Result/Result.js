@@ -1,24 +1,45 @@
 import styles from "./Result.module.css";
-import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import useArticleData from "../../hooks/useArticleData";
 import useScrape from "../../hooks/useScrape";
-import date from "../../assets/images/date.png"
+import date from "../../assets/images/date.png";
+// import star_y from "../../assets/images/star_y.png";
+// import star_g from "../../assets/images/star_g.png";
+
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 function Result() {
-  const { id } = useParams(); // URL 파라미터에서 id를 가져옵니다.
-  const article = useArticleData(id);
-  const { isScraped, starImage, toggleScrape } = useScrape(
+  const { id } = useParams(); // URL 파라미터에서 id를 가져온다.
+  const query = useQuery();
+  const url = query.get("url"); // 쿼리 파라미터에서 url을 가져온다.
+  const articleFromDB = useArticleData(id);
+  const [article, setArticle] = useState(null);
+  const { isScraped, starImage, toggleScrape, setScrapeStatus } = useScrape(
     article ? article.isscrape : 0,
     id
   );
 
   useEffect(() => {
-    if (article) {
-      // article 데이터가 변경될 때마다 isScraped 상태를 업데이트합니다.
-      toggleScrape(article.isscrape);
+    if (url) {
+      // URL 분석 요청 처리
+      fetch(`/api/result/?url=${encodeURIComponent(url)}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setArticle(data);
+          setScrapeStatus(data.isscrape);
+        })
+        .catch((error) => console.error("Error fetching article:", error));
+    } else if (id) {
+      // DB 요청 처리
+      if (articleFromDB) {
+        setArticle(articleFromDB);
+        setScrapeStatus(articleFromDB.isscrape);
+      }
     }
-  }, [article]);
+  }, [id, url, articleFromDB, setScrapeStatus]);
 
   if (!article) {
     return <div>Loading...</div>;

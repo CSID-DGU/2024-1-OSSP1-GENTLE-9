@@ -20,7 +20,7 @@ function Create() {
       .post("/api/analysis", { url: url }) //기사 입력 api 주소
       .then((response) => {
         if (response.status === 200) {
-          navigate("/creating");
+          navigate(`/result?url=${encodeURIComponent(url)}`);
         } else {
           console.error("Failed to send URL");
         }

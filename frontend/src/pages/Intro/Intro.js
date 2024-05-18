@@ -6,12 +6,13 @@ import news3 from "../../assets/images/news3.png";
 import news4 from "../../assets/images/news4.png";
 import news5 from "../../assets/images/news5.png";
 import news6 from "../../assets/images/news6.png";
+import title from "../../assets/images/title.png";
 
 function Intro() {
   return (
     <div className={styles.container}>
       <div className={styles.imageContainer}>
-        <img src="/title.png" alt="title" />
+        <img src={title} alt="title" />
         <div className={styles.textOverImage}>
           GENERATE NEUTRAL NEWS SERVICE
         </div>

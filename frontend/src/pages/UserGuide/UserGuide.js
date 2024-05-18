@@ -2,12 +2,13 @@ import React from "react";
 import styles from "./UserGuide.module.css";
 import guide1 from "../../assets/images/guide1.png";
 import guide2 from "../../assets/images/guide2.png";
+import title from "../../assets/images/title.png";
 
 function UserGuide() {
   return (
     <div className={styles.container}>
       <div className={styles.imageContainer}>
-        <img src="/title.png" alt="title" />
+        <img src={title} alt="title" />
         <div className={styles.textOverImage}>How to use our service?</div>
       </div>
 
