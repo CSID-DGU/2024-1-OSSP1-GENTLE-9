@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ConReactConfig(AppConfig):
+class ArticleAnalysisConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'con_react'
+    name = 'article_analysis'
