@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import styles from "./Nav.module.css";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/Auth.js";
+import logo_b from "../../assets/images/gentle_logo_b.png"
 
 function Nav() {
   const { user, login, logout } = useContext(AuthContext);
@@ -10,7 +11,7 @@ function Nav() {
       <div className={styles.nav_logo}>
         <Link to="/">
           <img
-            src="/gentle_logo_b.png"
+            src={logo_b}
             className={styles.nav_logo}
             alt="logo_black"
           />

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useScrape from "../../hooks/useScrape"; // 훅을 import 합니다.
 import styles from "./Article.module.css";
 
+
 function Article({
   id,
   title,

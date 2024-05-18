@@ -30,7 +30,9 @@ const useArticleData = (id) => {
       }
     };
 
-    fetchArticle();
+    if (id) {
+      fetchArticle();
+    }
   }, [id]);
 
   return article;
