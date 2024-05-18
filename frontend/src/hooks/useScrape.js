@@ -1,16 +1,18 @@
 import { useState } from "react";
 import axios from "axios";
+import star_y from "../../src/assets/images/star_y.png";
+import star_g from "../../src/assets/images/star_g.png";
 
 const useScrape = (initialScrapeStatus, articleId) => {
   const [isScraped, setIsScraped] = useState(initialScrapeStatus);
   const [starImage, setStarImage] = useState(
-    initialScrapeStatus ? "/star_y.png" : "/star_g.png"
+    initialScrapeStatus ? { star_y } : { star_g }
   );
 
   const toggleScrape = () => {
     const newScrapeStatus = !isScraped;
     setIsScraped(newScrapeStatus);
-    setStarImage(newScrapeStatus ? "/star_y.png" : "/star_g.png");
+    setStarImage(newScrapeStatus ? { star_y } : { star_g });
 
     if (newScrapeStatus) {
       // 스크랩 추가

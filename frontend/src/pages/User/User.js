@@ -9,7 +9,7 @@ function User() {
   // useEffect(() => {
   //   async function fetchArticles() {
   //     try {
-  //       const response = await axios.get("http://localhost:8000/api/articles/");
+  //       const response = await axios.get("http://localhost:8000/api/articles/"); //api 주소
   //       setArticles(response.data);
   //     } catch (error) {
   //       console.error("Error fetching articles:", error);

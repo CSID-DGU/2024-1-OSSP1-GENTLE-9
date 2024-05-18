@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useArticleData from "../../hooks/useArticleData";
 import useScrape from "../../hooks/useScrape";
+import date from "../../assets/images/date.png"
 
 function Result() {
   const { id } = useParams(); // URL 파라미터에서 id를 가져옵니다.
@@ -31,7 +32,7 @@ function Result() {
         </div>
         <div className={styles.middle}>
           <div className={styles.date}>
-            <img src="/date.png" alt="date" />
+            <img src={date} alt="date" />
             <p>{article.date}</p>
           </div>
           <img

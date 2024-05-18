@@ -20,7 +20,7 @@ const AuthProvider = ({ children }) => {
         })
           .then((response) => response.json())
           .then((data) => {
-            fetch("http://localhost:8000/kakao-login/", {
+            fetch("http://localhost:8000/kakao-login/", { //api 주소 넣기
               method: "POST",
               headers: {
                 "Content-Type": "application/json",

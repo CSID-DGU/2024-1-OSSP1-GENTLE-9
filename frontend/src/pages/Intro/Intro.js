@@ -1,5 +1,11 @@
 import React from "react";
 import styles from "./Intro.module.css";
+import news1 from "../../assets/images/news1.png";
+import news2 from "../../assets/images/news2.png";
+import news3 from "../../assets/images/news3.png";
+import news4 from "../../assets/images/news4.png";
+import news5 from "../../assets/images/news5.png";
+import news6 from "../../assets/images/news6.png";
 
 function Intro() {
   return (
@@ -43,14 +49,14 @@ function Intro() {
             제공하는 언론사는 다음과 같습니다.
           </p>
           <div className={styles.image_container}>
-            <img src="/news1.png" alt="조선일보" />
-            <img src="/news2.png" alt="중앙일보" />
-            <img src="/news3.png" alt="한겨레" />
+            <img src={news1} alt="조선일보" />
+            <img src={news2} alt="중앙일보" />
+            <img src={news3} alt="한겨레" />
           </div>
           <div className={styles.image_container}>
-            <img src="/news4.png" alt="경향신문" />
-            <img src="/news5.png" alt="서울신문" />
-            <img src="/news6.png" alt="한국일보" />
+            <img src={news4} alt="경향신문" />
+            <img src={news5} alt="서울신문" />
+            <img src={news6} alt="한국일보" />
           </div>
 
           <p className={styles.intro}>

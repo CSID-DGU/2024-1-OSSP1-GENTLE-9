@@ -1,12 +1,13 @@
 import React from "react";
 import styles from "./Footer.module.css";
 import { Link } from "react-router-dom";
+import logo_w from "../../assets/images/gentle_logo_w.png";
 
 function Footer() {
   return (
     <div className={styles.container}>
       <div>
-        <img className={styles.logo} src="/gentle_logo_w.png" alt="logo_w" />
+        <img className={styles.logo} src={logo_w} alt="logo_w" />
       </div>
       <div className={styles.word_container}>
         <p>Contact: gentle@gmail.com</p>
