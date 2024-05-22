@@ -69,5 +69,6 @@ def crawl_content(url):
     return {
         "title": title_text,
         "date": date_time,
-        "content": article_text
+        "content": article_text,
+        "_company": media_name
     }
