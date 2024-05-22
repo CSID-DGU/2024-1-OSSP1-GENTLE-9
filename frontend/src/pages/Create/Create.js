@@ -17,7 +17,7 @@ function Create() {
   // URL 전송 로직
   const handleSendClick = () => {
     axios
-      .post("/api/analysis", { url: url }) //기사 입력 api 주소
+      .post("/api/article/result", { url: url }) //기사 입력 api 주소
       .then((response) => {
         if (response.status === 200) {
           navigate(`/result?url=${encodeURIComponent(url)}`);
