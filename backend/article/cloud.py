@@ -44,8 +44,11 @@ def create_cloud(url):
         print("최소 빈도수가 너무 큽니다. 다시 설정해 주세요.")
         print("프로그램을 종료합니다.")
         sys.exit()
+
+    font_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'fonts', 'HanSantteutDotum-Regular.ttf')
+    
     #워드클라우드 만들기
-    wc = WordCloud(background_color="white" ,  font_path=r"C:/Windows/Fonts/malgun.ttf", width=600, height=600, scale=2.0, max_font_size=250)
+    wc = WordCloud(background_color="white" ,  font_path=font_path, width=600, height=600, scale=2.0, max_font_size=250)
     #가로 600, 세로 600, 크기 2, 최대 글자 크기 250
     gen = wc.generate_from_frequencies(c)
     img = gen.to_image()
