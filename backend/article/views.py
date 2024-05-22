@@ -13,8 +13,8 @@ from .scrape import scrape_article
 
 class AnalyzeURL(APIView):
     def get(self, request):
-        #url="https://n.news.naver.com/article/015/0004987800?cds=news_media_pc"
-        url = request.GET.get('url') 
+        url="https://n.news.naver.com/article/015/0004987931?cds=news_media_pc"
+        #url = request.GET.get('url') 
         if not url:
             return Response({'error': 'URL parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
         
