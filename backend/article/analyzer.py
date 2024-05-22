@@ -50,11 +50,11 @@ def analyze_url(url):
     
     article_view = "기사 관점"
     if -1 <= view_score < -0.4:
-        article_view = 부정
+        article_view = "부정"
     elif -0.4 <= view_score <= 0.2:
-        article_view = 중립
+        article_view = "중립"
     else:
-        article_view = 긍정
+        article_view = "긍정"
 
     # 성향 분석
     embedding = get_embeddings(news_title).reshape(1, -1)
@@ -80,7 +80,7 @@ def analyze_url(url):
     df = pd.DataFrame({"언론사": media_names, "정치 성향": data})
     
     new_article_media = company #언론사 연결(입력받음)
-    new_article_value, hex_value = get_media_info(new_article_media)
+    # new_article_value, hex_value = get_media_info(new_article_media)
     
     plt.rcParams['font.family'] = 'Malgun Gothic'
     plt.rcParams['axes.unicode_minus'] = False
