@@ -71,4 +71,8 @@ def crawl_content(url):
         "date": date_time,
         "content": article_text,
         "_company": media_name
+<<<<<<< HEAD
     }
+=======
+    }
+>>>>>>> 6b975248deb261c1b38acfbc451a57a78aecb4bd
