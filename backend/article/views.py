@@ -13,8 +13,8 @@ from .scrape import scrape_article
 
 class AnalyzeURL(APIView):
     def get(self, request):
-        url="https://n.news.naver.com/article/015/0004987800?cds=news_media_pc"
-        #url = request.GET.get('url') 
+        #url="https://n.news.naver.com/article/015/0004987800?cds=news_media_pc"
+        url = request.GET.get('url') 
         if not url:
             return Response({'error': 'URL parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -37,16 +37,14 @@ class AnalyzeURL(APIView):
 class ArticleDetail(APIView):
     def get(self, request, id):
         article = get_object_or_404(Article, pk=id)
-        cloud_image = None
-        analysis_image = None
 
         response_data = {
             "id": article.id,
             "title": article.title,
             "summary": article.summary,
             "date": article.date.isoformat(),
-            "cloud": article.cloud,
-            "analysis": analysis_image,
+            "cloud": article.cloud,  # 데이터베이스에서 가져온 Base64 인코딩된 이미지 데이터
+            "analysis": article.analysis,  # 데이터베이스에서 가져온 Base64 인코딩된 이미지 데이터
             "isscrape": article.isscrape,
         }
         return Response(response_data)
