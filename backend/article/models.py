@@ -2,6 +2,7 @@
 from django.db import models
 
 class Article(models.Model):
+    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=256)
     summary = models.TextField()
     date = models.DateField()
