@@ -24,7 +24,7 @@ def analyze_url(url):
     #===========================
     temp_crawl = crawl_content(url)
     news_title = temp_crawl["title"] #기사 제목
-    company = temp_crawl["company"] #언론사 명
+    company = temp_crawl["_company"] #언론사 명
     #============================
 
     news_content = crawl_content(url)#Json 형식으로 news_content에 저장
