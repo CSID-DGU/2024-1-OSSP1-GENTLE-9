@@ -1,61 +1,42 @@
 import React, { createContext, useState } from "react";
+import axios from "axios";
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const login = async () => {
+  const login = () => {
     if (!window.Kakao.isInitialized()) {
-      console.error("Kakao SDK is not initialized.");
-      return;
+      window.Kakao.init(process.env.REACT_APP_KAKAO_JAVASCRIPT_KEY);
     }
 
     window.Kakao.Auth.login({
       success: (authObj) => {
-        fetch("https://kapi.kakao.com/v2/user/me", {
-          headers: {
-            Authorization: `Bearer ${authObj.access_token}`,
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            fetch("http://localhost:8000/kakao-login/", { //api 주소 넣기
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ access_token: authObj.access_token }),
-            })
-              .then((res) => res.json())
-              .then((result) => {
-                console.log(result);
-                setUser(data);
-              })
-              .catch((error) => {
-                console.error("Error logging in:", error);
-              });
+        axios
+          .post("http://localhost:8000/auth/kakao/", {
+            access_token: authObj.access_token,
+          })
+          .then((response) => {
+            setUser(response.data.user);
+            localStorage.setItem("token", response.data.token);
           })
           .catch((error) => {
-            console.error("Error fetching user info:", error);
+            console.error("Login failed", error);
           });
       },
       fail: (err) => {
-        console.error("Login failed:", err);
+        console.error("Login failed", err);
       },
     });
   };
 
   const logout = () => {
-    if (!window.Kakao.isInitialized()) {
-      console.error("Kakao SDK is not initialized.");
-      return;
+    setUser(null);
+    localStorage.removeItem("token");
+    if (window.Kakao.Auth.getAccessToken()) {
+      window.Kakao.Auth.logout();
     }
-
-    window.Kakao.Auth.logout(() => {
-      console.log("Logged out.");
-      setUser(null);
-    });
   };
 
   return (

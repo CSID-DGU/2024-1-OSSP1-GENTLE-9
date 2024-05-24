@@ -11,6 +11,7 @@ import jpype
 import io
 import matplotlib.pyplot as plt
 
+
 def create_cloud(url):
     #워드 클라우드 생성 코드 작성
     news_content = crawl_content(url)#Json 형식으로 news_content에 저장
