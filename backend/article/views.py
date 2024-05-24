@@ -2,7 +2,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Article
-import base64
 from django.shortcuts import get_object_or_404
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -10,28 +9,36 @@ from django.utils.decorators import method_decorator
 from .analyzer import analyze_url
 from .cloud import create_cloud
 from .scrape import scrape_article
+from .serializers import UrlSerializer
+
 
 class AnalyzeURL(APIView):
-    def get(self, request):
-        url="https://n.news.naver.com/article/032/0003297852?cds=news_media_pc"
-        #url = request.GET.get('url') 
-        if not url:
-            return Response({'error': 'URL parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        serializer = UrlSerializer(data=request.data)
         
-        article_data = analyze_url(url)
-        scrape = scrape_article(url)
-        cloud=create_cloud(url)
+        if serializer.is_valid():
+            validated_data = serializer.save()  # validated_data는 {'url': url} 형태입니다.
+            url = validated_data['url']  # 검증된 URL 가져오기
 
-        response_data = {
-            "title": scrape["title"],
-            "summary": scrape["summary"],
-            "date": scrape["date"],
-            "cloud_image": cloud["cloud"],
-            "analysis_image": article_data["analysis"],
-            "isscrape": article_data["isscrape"]
-        }
+            # URL 분석 및 스크래핑 로직 호출
+            article_data = analyze_url(url)
+            scrape = scrape_article(url)
+            cloud = create_cloud(url)
 
-        return Response(response_data)
+            # 응답 데이터 구성
+            response_data = {
+                "title": scrape["title"],
+                "summary": scrape["summary"],
+                "date": scrape["date"],
+                "cloud_image": cloud["cloud"],
+                "analysis_image": article_data["analysis"],
+                "isscrape": article_data["isscrape"],
+                "url": url
+            }
+
+            return Response(response_data, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 class ArticleDetail(APIView):

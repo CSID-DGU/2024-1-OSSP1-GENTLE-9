@@ -11,6 +11,7 @@ import jpype
 import io
 import matplotlib.pyplot as plt
 from .scrape import crawl_content
+import nltk
 
 def analyze_url(url):
     # 프로젝트 루트 디렉토리에 있는 더미 이미지 파일 경로
@@ -22,6 +23,7 @@ def analyze_url(url):
     #     cloud_image = base64.b64encode(image_file.read()).decode('utf-8')
         #워드 클라우드 생성 코드 작성
     #===========================
+    nltk.download('punkt')
     temp_crawl = crawl_content(url)
     news_title = temp_crawl["title"] #기사 제목
     company = temp_crawl["_company"] #언론사 명
