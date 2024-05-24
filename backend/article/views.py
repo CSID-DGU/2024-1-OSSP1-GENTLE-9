@@ -11,7 +11,6 @@ from .cloud import create_cloud
 from .scrape import scrape_article
 from .serializers import UrlSerializer
 
-
 class AnalyzeURL(APIView):
     def post(self, request):
         serializer = UrlSerializer(data=request.data)
@@ -19,6 +18,7 @@ class AnalyzeURL(APIView):
         if serializer.is_valid():
             validated_data = serializer.save()  # validated_data는 {'url': url} 형태입니다.
             url = validated_data['url']  # 검증된 URL 가져오기
+
 
             # URL 분석 및 스크래핑 로직 호출
             article_data = analyze_url(url)

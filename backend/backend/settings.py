@@ -34,13 +34,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
     'article',
     'rest_framework',
 ]
@@ -58,9 +58,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
+
+CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOW_METHODS = [
     "DELETE",
     "GET",
@@ -110,7 +110,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": 'project_db',
         'USER': 'root',
-        'PASSWORD':'1234',
+        'PASSWORD':'iron4man',
         'HOST':'35.223.239.6',
         'PORT':'3306'
     }

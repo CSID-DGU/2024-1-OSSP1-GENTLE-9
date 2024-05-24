@@ -14,11 +14,27 @@
     <title>React App</title>
   </head>
   <body>
+    <a href="javascript:kakaoLogin();"></a>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <script>
-      window.Kakao.init('9d480f4a9feed475b8210936d3e7de4d');//카카오 앱 키로 교체
+      window.Kakao.init("9d480f4a9feed475b8210936d3e7de4d");//카카오 앱 키로 교체
+      function kakaoLogin(){
+        window.Kakao.Auth.login({
+          scope:'profile_nickname',
+          success: function(authObj){
+            console.log(authObj);
+            window.Kakao.API.request({
+              url:'/v2/user/me',
+              success: res => {
+                const kakao_account = res.kakao_account;
+                console.log(kakao_account);
+              }
+            });
+          }
+        });
+      }
     </script>
   </body>
 </html>
