@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import styles from "./Create.module.css";
 import title from "../../assets/images/title.png";
 import send from "../../assets/images/send.png";
@@ -16,18 +15,7 @@ function Create() {
 
   // URL 전송 로직
   const handleSendClick = () => {
-    axios
-      .post("/api/article/result", { url: url }) //기사 입력 api 주소
-      .then((response) => {
-        if (response.status === 200) {
-          navigate(`/result?url=${encodeURIComponent(url)}`);
-        } else {
-          console.error("Failed to send URL");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    navigate(`/result?url=${encodeURIComponent(url)}`);
   };
 
   return (
@@ -46,7 +34,12 @@ function Create() {
             onChange={handleInputChange}
             placeholder="기사 URL 입력"
           />
-          <img src={send} alt="send" onClick={handleSendClick} />
+          <img
+            src={send}
+            alt="send"
+            onClick={handleSendClick}
+            style={{ cursor: "pointer" }}
+          />
         </div>
       </div>
     </div>

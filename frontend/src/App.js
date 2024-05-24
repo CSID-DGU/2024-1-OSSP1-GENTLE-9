@@ -23,9 +23,9 @@ function App() {
           <Route path="/userguide" element={<UserGuide />} />
           <Route path="/create" element={<Create />} />
           <Route path="/creating" element={<Creating />} />
-          <Route path="/result/:id" element={<Result />} />
+          <Route path="/result" element={<Result />} />
           <Route path="/user" element={<User />} />
-          <Route path="/auth/kakao/callback" element={<KakaoCallback />} />
+          <Route path="/oauth/kakao" element={<KakaoCallback />} />
         </Routes>
         <Footer />
       </AuthProvider>
