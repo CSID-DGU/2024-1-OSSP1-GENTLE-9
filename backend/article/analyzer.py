@@ -3,7 +3,14 @@ import base64
 import os
 import matplotlib.pyplot as plt
 from .scrape import crawl_content
-
+import numpy as np
+from matplotlib.colors import rgb2hex
+import json
+import seaborn as sns
+from io import BytesIO
+import torch
+from sklearn.feature_extraction.text import TfidfVectorizer
+from transformers import DistilBertTokenizer, DistilBertModel 
 import nltk
 
 def analyze_url(url):
@@ -15,22 +22,12 @@ def analyze_url(url):
     # with open(cloud_image_path, "rb") as image_file:
     #     cloud_image = base64.b64encode(image_file.read()).decode('utf-8')
         #워드 클라우드 생성 코드 작성
-    #===========================
+
     nltk.download('punkt')
     temp_crawl = crawl_content(url)
     news_title = temp_crawl["title"] #기사 제목
     company = temp_crawl["_company"] #언론사 명
-    #============================
-=======
-import numpy as np
-from matplotlib.colors import rgb2hex
-import json
-import seaborn as sns
-from io import BytesIO
 
-import torch
-from sklearn.feature_extraction.text import TfidfVectorizer
-from transformers import DistilBertTokenizer, DistilBertModel 
 
 def load_models():
     # 모델 파일 경로

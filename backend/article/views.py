@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from .analyzer import analyze_url
 from .cloud import create_cloud
-from .scrape import scrape_article
+from .scrape import scrape_article, summary
 from .serializers import UrlSerializer
 
 class AnalyzeURL(APIView):
@@ -21,14 +21,16 @@ class AnalyzeURL(APIView):
 
 
             # URL 분석 및 스크래핑 로직 호출
-            article_data = analyze_url(url)
-            scrape = scrape_article(url)
-            cloud = create_cloud(url)
+            scrape = scrape_article(url)#기사 제목, 날짜, 본문 반환
+            cloud = create_cloud(url)#기사 본문을 기반으로 워드클라우드 제작
+            article_data = analyze_url(url)#기사 분석
+            summary_result = summary(scrape["content"])#기사 요약
+
 
             # 응답 데이터 구성
             response_data = {
                 "title": scrape["title"],
-                "summary": scrape["summary"],
+                "summary": summary_result,
                 "date": scrape["date"],
                 "cloud_image": cloud["cloud"],
                 "analysis_image": article_data["analysis"],
