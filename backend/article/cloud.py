@@ -5,16 +5,23 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from collections import Counter
 from konlpy.tag import Okt
-from .scrape import crawl_content
+from .scrape import scrape_article
 import sys
 import jpype
 import io
 import matplotlib.pyplot as plt
+import nltk
 
+
+def load_stopwords(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        stopwords = file.read().splitlines()
+    return stopwords
 
 def create_cloud(url):
+    print(nltk.data.path)
     #워드 클라우드 생성 코드 작성
-    news_content = crawl_content(url)#Json 형식으로 news_content에 저장
+    news_content = scrape_article(url)#Json 형식으로 news_content에 저장
     least_num = 2#2번 이상 호출된 단어만 워드 클라우드에 출력
     
     #matplotlib 대화형 모드 켜기
@@ -27,8 +34,12 @@ def create_cloud(url):
     #명사만 추출
     nouns = okt.nouns(text)
 
-    # 단어의 길이가 1개인 것은 제외
-    words = [n for n in nouns if len(n) > 1]
+    #불용어 파일 오픈
+    stopword_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'fonts', 'stopword.txt')
+    stopwords = load_stopwords(stopword_file_path)
+
+    # 불용어 제거 및 단어의 길이가 1개인 것은 제외
+    words = [n for n in nouns if len(n) > 1 and n not in stopwords]
 
     # 위에서 얻은 words를 처리하여 단어별 빈도수 형태의 딕셔너리 데이터를 구함
     c = Counter(words)

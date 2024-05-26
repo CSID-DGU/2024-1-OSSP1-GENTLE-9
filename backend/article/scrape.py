@@ -3,50 +3,9 @@ from bs4 import BeautifulSoup
 from summarizer import Summarizer
 import requests
 import nltk
-from transformers import BertTokenizer, BertModel
-from sentence_transformers import SentenceTransformer
-from summarizer import Summarizer
-from nltk.tokenize import sent_tokenize
-import torch
-from .models import Article
+
 
 def scrape_article(url):
-    article_json = crawl_content(url)
-    sum = summary(article_json["content"])
-
-    return {
-        "title": article_json["title"],
-        "summary": sum,
-        "date": article_json["date"],
-    }
-
-def summary(news_content):
-    model_name = 'sentence-transformers/bert-base-nli-mean-tokens'
-    model = SentenceTransformer(model_name)
-    
-    # 문장별로 처리
-    sentences = sent_tokenize(news_content)
-    if len(sentences) < 3:#길이가 3줄보다 많아야 함
-        return "Not enough sentences to summarize."    
-
-    # 문장 임베딩
-    sentence_embeddings = model.encode(sentences)
-
-    # 문장 중요도 계산
-    sentence_embeddings = torch.tensor(sentence_embeddings)
-    k = min(3, len(sentences)) 
-    important_sentence_indices = torch.topk(torch.norm(sentence_embeddings, dim=1), k).indices
-
-    # 중요한 문장 출력
-    result = " "
-    important_sentences = [sentences[index] for index in important_sentence_indices]
-    for sentence in important_sentences:
-        result += sentence + " "
-    
-    return result
-
-def crawl_content(url):
-        # BeautifulSoup 객체 생성, HTML 파서로 'html.parser' 사용
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     #=====================================크롤링
@@ -73,5 +32,8 @@ def crawl_content(url):
         "_company": media_name
     }
 
-    
+def summary(news_content):
+    model = Summarizer()
+    result = model(news_content)
 
+    return result
