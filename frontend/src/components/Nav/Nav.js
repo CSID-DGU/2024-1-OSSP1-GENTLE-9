@@ -1,26 +1,41 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styles from "./Nav.module.css"; // 필요한 경우 경로 수정
 import logo_b from "../../assets/images/gentle_logo_b.png"; // 필요한 경우 경로 수정
+import axios from "axios";
 
 function Nav() {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    // 유저 로그인 상태를 확인하는 로직을 여기에 추가합니다.
-    // 예를 들어, 로컬 스토리지에서 토큰을 확인하거나 API 호출을 통해 확인할 수 있습니다.
-    // setUser(로그인된 유저 정보);
+    // 로그인 상태 확인을 위한 로컬 스토리지 확인
+    const loggedInUser = localStorage.getItem("user");
+    if (loggedInUser) {
+      setUser(JSON.parse(loggedInUser));
+    } else {
+      // 서버에서 현재 로그인된 사용자 정보를 가져옴
+      axios
+        .get("http://localhost:8000/accounts/current_user/")
+        .then((response) => {
+          const currentUser = response.data;
+          localStorage.setItem("user", JSON.stringify(currentUser));
+          setUser(currentUser);
+        })
+        .catch((error) => {
+          console.log("Not logged in", error);
+        });
+    }
   }, []);
 
-  const handleLogin = () => {
-    navigate("/login");
+  const handleKakaoLogin = () => {
+    window.location.href = "http://localhost:8000/accounts/kakao/login/";
   };
 
   const handleLogout = () => {
-    // 로그아웃 로직을 여기에 추가합니다.
-    // 예를 들어, 로컬 스토리지에서 토큰을 삭제하거나 API 호출을 통해 로그아웃할 수 있습니다.
+    // 로그아웃 로직
     setUser(null);
+    localStorage.removeItem("user");
+    window.location.href = "http://localhost:3000"; // 메인 페이지로 리디렉션
   };
 
   return (
@@ -48,13 +63,14 @@ function Nav() {
         </Link>
       </div>
       {user ? (
-        <div>
-          <p onClick={handleLogout} className={styles.login}>
+        <div className={styles.user_info}>
+          <p>안녕하세요, {user.first_name}님!</p>
+          <p className={styles.login} onClick={handleLogout}>
             로그아웃
           </p>
         </div>
       ) : (
-        <p onClick={handleLogin} className={styles.login}>
+        <p onClick={handleKakaoLogin} className={styles.login}>
           로그인
         </p>
       )}
