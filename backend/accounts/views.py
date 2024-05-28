@@ -7,6 +7,9 @@ from rest_framework.permissions import AllowAny
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
+from .models import user_model
+from .serializers import UserProfileSerializer
+
 
 class KakaoLogin(APIView):
     permission_classes = [AllowAny]
@@ -67,17 +70,17 @@ class KakaoCallback(APIView):
             'username': user.username,
             'first_name': user.first_name,
         }
+        new_user = user_model(username=kakao_id, firstname=nickname)
+        new_user.save()
 
         # 로그인 후 클라이언트의 메인 페이지로 리디렉션
-        return Response(response_data)
+        #return Response(response_data)
+        return redirect('http://localhost:3000/')
     
 class CurrentUserView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = request.user
-        response_data = {
-            'username': user.username,
-            'first_name': user.first_name,
-        }
-        return Response(response_data)
+        user_profile = user_model.objects.get(user=request.user)
+        serializer = UserProfileSerializer(user_profile)
+        return Response(serializer.data)
