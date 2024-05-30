@@ -1,15 +1,26 @@
-from django.shortcuts import render, redirect
+# from django.shortcuts import render, redirect
+# import requests
+# from django.conf import settings
+# from rest_framework.views import APIView
+# from rest_framework.response import Response
+# from rest_framework.permissions import AllowAny
+# from django.contrib.auth import login
+# from django.contrib.auth.models import User
+# from rest_framework.permissions import IsAuthenticated
+# from rest_framework_simplejwt.tokens import RefreshToken
+# from django.views.decorators.csrf import csrf_exempt
+# from django.utils.decorators import method_decorator
+from django.shortcuts import redirect
 import requests
 from django.conf import settings
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import login
 from django.contrib.auth.models import User
-from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from rest_framework.response import Response
 
 @method_decorator(csrf_exempt,name ='dispatch')
 
