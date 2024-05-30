@@ -1,15 +1,28 @@
-from django.shortcuts import render, redirect
+# from django.shortcuts import render, redirect
+# import requests
+# from django.conf import settings
+# from rest_framework.views import APIView
+# from rest_framework.response import Response
+# from rest_framework.permissions import AllowAny
+# from django.contrib.auth import login
+# from django.contrib.auth.models import User
+# from rest_framework.permissions import IsAuthenticated
+# from rest_framework_simplejwt.tokens import RefreshToken
+# from django.views.decorators.csrf import csrf_exempt
+# from django.utils.decorators import method_decorator
+from django.shortcuts import redirect
 import requests
 from django.conf import settings
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import login
 from django.contrib.auth.models import User
-from rest_framework.permissions import IsAuthenticated
-from .models import user_model
-from .serializers import UserProfileSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from rest_framework.response import Response
 
+@method_decorator(csrf_exempt,name ='dispatch')
 
 class KakaoLogin(APIView):
     permission_classes = [AllowAny]
@@ -22,6 +35,7 @@ class KakaoLogin(APIView):
         )
         return redirect(kakao_auth_url)
 
+@method_decorator(csrf_exempt, name='dispatch')
 class KakaoCallback(APIView):
     permission_classes = [AllowAny]
 
@@ -37,7 +51,7 @@ class KakaoCallback(APIView):
             'redirect_uri': redirect_uri,
             'code': code,
         }
-        
+
         token_headers = {
             'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
         }
@@ -50,7 +64,7 @@ class KakaoCallback(APIView):
         user_info_headers = {
             'Authorization': f'Bearer {access_token}',
         }
-        
+
         user_info_res = requests.get(user_info_url, headers=user_info_headers)
         user_info_json = user_info_res.json()
 
@@ -62,25 +76,26 @@ class KakaoCallback(APIView):
             user = User.objects.get(username=kakao_id)
         except User.DoesNotExist:
             user = User.objects.create(username=kakao_id, first_name=nickname)
-        
+
         login(request, user)
 
-        # 사용자 정보를 JSON 응답으로 반환
-        response_data = {
-            'username': user.username,
-            'first_name': user.first_name,
-        }
-        new_user = user_model(username=kakao_id, firstname=nickname)
-        new_user.save()
+        # JWT 토큰 생성
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
 
-        # 로그인 후 클라이언트의 메인 페이지로 리디렉션
-        #return Response(response_data)
-        return redirect('http://localhost:3000/')
+        # 로그인 후 클라이언트의 메인 페이지로 리디렉션하면서 토큰 전달
+        response = redirect(f'http://localhost:3000/?token={access_token}')
+        return response
+
+
     
 class CurrentUserView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user_profile = user_model.objects.get(user=request.user)
-        serializer = UserProfileSerializer(user_profile)
-        return Response(serializer.data)
+        user = request.user
+        response_data = {
+            'username': user.username,
+            'first_name': user.first_name,
+        }
+        return Response(response_data)

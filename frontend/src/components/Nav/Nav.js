@@ -7,23 +7,55 @@ import axios from "axios";
 function Nav() {
   const [user, setUser] = useState(null);
 
+  const fetchUserInfo = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      console.log("Request user info with token:", token);
+      if (!token) {
+        throw new Error("No token found");
+      }
+
+      const response = await axios.get(
+        "http://localhost:8000/accounts/current_user/",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Request sent successfully:", response);
+
+      if (response.status === 200) {
+        const userInfo = response.data;
+        setUser(userInfo);
+        localStorage.setItem("user", JSON.stringify(userInfo));
+      }
+    } catch (error) {
+      console.error("Failed to fetch user info:", error);
+    }
+  };
+
   useEffect(() => {
-    // 로그인 상태 확인을 위한 로컬 스토리지 확인
-    const loggedInUser = localStorage.getItem("user");
-    if (loggedInUser) {
-      setUser(JSON.parse(loggedInUser));
-    } else {
-      // 서버에서 현재 로그인된 사용자 정보를 가져옴
-      axios
-        .get("http://localhost:8000/accounts/current_user/")
-        .then((response) => {
-          const currentUser = response.data;
-          localStorage.setItem("user", JSON.stringify(currentUser));
-          setUser(currentUser);
-        })
-        .catch((error) => {
-          console.log("Not logged in", error);
-        });
+    // URL에서 토큰을 확인하여 로컬 스토리지에 저장
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    if (token) {
+      localStorage.setItem("token", token);
+      console.log("토큰: ", token);
+      window.history.replaceState(null, null, window.location.pathname); // URL에서 토큰 제거
+    }
+
+    // 로컬 스토리지에서 사용자 정보를 불러옴
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      console.log("stored user: ", storedUser);
+      setUser(JSON.parse(storedUser));
+    }
+
+    // 사용자 정보 가져오기
+    if (token || storedUser) {
+      fetchUserInfo();
     }
   }, []);
 
@@ -35,6 +67,7 @@ function Nav() {
     // 로그아웃 로직
     setUser(null);
     localStorage.removeItem("user");
+    localStorage.removeItem("token"); // 토큰도 제거
     window.location.href = "http://localhost:3000"; // 메인 페이지로 리디렉션
   };
 
@@ -64,7 +97,6 @@ function Nav() {
       </div>
       {user ? (
         <div className={styles.user_info}>
-          <p>안녕하세요, {user.first_name}님!</p>
           <p className={styles.login} onClick={handleLogout}>
             로그아웃
           </p>

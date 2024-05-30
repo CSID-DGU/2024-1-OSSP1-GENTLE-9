@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Article
+from .models import Article, Scrape
 from django.shortcuts import get_object_or_404
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -9,7 +9,9 @@ from django.utils.decorators import method_decorator
 from .analyzer import analyze_url
 from .cloud import create_cloud
 from .scrape import scrape_article, summary
-from .serializers import UrlSerializer
+from .serializers import UrlSerializer, ScrapeSerializer
+from rest_framework.permissions import IsAuthenticated
+
 
 class AnalyzeURL(APIView):
     def post(self, request):
@@ -59,18 +61,11 @@ class ArticleDetail(APIView):
         return Response(response_data)
 
 @method_decorator(csrf_exempt, name='dispatch')
-class UpdateScrapeStatus(APIView):
-    def post(self, request):
-        data = json.loads(request.body)
-        article_id = data.get('articleId')
-        article = get_object_or_404(Article, pk=article_id)
-        article.isscrape = True
-        article.save()
-        return Response({"status": "scrape added"})
+class UserScrapesView(APIView):
+    permission_classes = [IsAuthenticated]
 
-    def delete(self, request):
-        article_id = request.GET.get('articleId')
-        article = get_object_or_404(Article, pk=article_id)
-        article.isscrape = False
-        article.save()
-        return Response({"status": "scrape removed"})
+    def get(self, request):
+        user = request.user
+        scrapes = Scrape.objects.filter(user=user)
+        serializer = ScrapeSerializer(scrapes, many=True)
+        return Response(serializer.data)
