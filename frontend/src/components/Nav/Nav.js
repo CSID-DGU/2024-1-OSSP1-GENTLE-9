@@ -97,7 +97,6 @@ function Nav() {
       </div>
       {user ? (
         <div className={styles.user_info}>
-          <p>안녕하세요, {user.first_name}님!</p>
           <p className={styles.login} onClick={handleLogout}>
             로그아웃
           </p>

@@ -10,7 +10,6 @@ import User from "./pages/User/User.js";
 import Nav from "./components/Nav/Nav.js";
 import Footer from "./components/Footer/Footer.js";
 import AuthProvider from "./contexts/Auth.js";
-import KakaoCallback from "./components/KakaoCallback.js";
 
 function App() {
   return (
@@ -25,7 +24,6 @@ function App() {
           <Route path="/creating" element={<Creating />} />
           <Route path="/result" element={<Result />} />
           <Route path="/user" element={<User />} />
-          <Route path="/oauth/kakao" element={<KakaoCallback />} />
         </Routes>
         <Footer />
       </AuthProvider>
