@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>React App</title>
+  </head>
+  <body>
+    <a href="javascript:kakaoLogin();"></a>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script>
+      window.Kakao.init("9d480f4a9feed475b8210936d3e7de4d");//카카오 앱 키로 교체
+      function kakaoLogin(){
+        window.Kakao.Auth.login({
+          scope:'profile_nickname',
+          success: function(authObj){
+            console.log(authObj);
+            window.Kakao.API.request({
+              url:'/v2/user/me',
+              success: res => {
+                const kakao_account = res.kakao_account;
+                console.log(kakao_account);
+              }
+            });
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

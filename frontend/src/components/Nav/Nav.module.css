@@ -1,0 +1,40 @@
+.container {
+  flex-direction: row;
+  display: flex;
+  width: 100%;
+  height: auto;
+  color: #fff;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.nav_logo {
+  width: 167px;
+  height: 71px;
+  padding-left: 10px;
+}
+
+.nav_container {
+  display: flex;
+  width: auto;
+  height: auto;
+  align-items: center;
+  color: black;
+  gap: 40px;
+  padding-right: 70px;
+  font-size: 16px;
+}
+
+.nav_container p:hover {
+  font-weight: bold;
+}
+
+.login {
+  margin-right: 30px;
+  color: black;
+}
+.login:hover {
+  font-weight: bold;
+  cursor: pointer;
+}
