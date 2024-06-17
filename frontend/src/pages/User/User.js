@@ -86,30 +86,6 @@ function User() {
           ))}
         </div>
         <hr />
-        {/* <div className={styles.bookmark_container}>
-          <p className={styles.subtitle}>북마크된 기사</p>
-          {bookmarks.map((bookmark) => (
-            <div key={bookmark.id} className={styles.bookmark}>
-              <a href={bookmark.url} target="_blank" rel="noopener noreferrer">
-                {bookmark.title}
-              </a>
-              <p>{bookmark.summary}</p>
-              <p>{new Date(bookmark.created_at).toLocaleString()}</p>
-              <button
-                onClick={() =>
-                  handleBookmarkToggle(
-                    bookmark.id,
-                    bookmark.url,
-                    bookmark.title,
-                    bookmark.summary
-                  )
-                }
-              >
-                Remove Bookmark
-              </button>
-            </div>
-          ))}
-        </div> */}
       </div>
     </div>
   );
