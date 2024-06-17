@@ -7,6 +7,7 @@ import date from "../../assets/images/date.png";
 import creating from "../../assets/images/creating.png";
 import starFilled from "../../assets/images/star_y.png"; // 채워진 별 이미지
 import starEmpty from "../../assets/images/star_g.png"; // 빈 별 이미지
+import FadeLoader from "react-spinners/FadeLoader";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -47,7 +48,6 @@ function Result() {
         })
         .catch((error) => {
           console.error("기사 가져오기 오류:", error);
-          alert("URL 전송에 실패했습니다. 다시 시도해 주세요.");
         });
     } else if (id) {
       console.log("ID로 기사 가져오기 시도:", id);
@@ -110,14 +110,14 @@ function Result() {
   if (!article && !id) {
     return (
       <div className={styles.creating_container}>
-        <img src={creating} alt="creating" />
+        <FadeLoader color="#000000" />
         <p>기사 생성 중...</p>
       </div>
     );
   } else if (!article && id) {
     return (
       <div className={styles.creating_container}>
-        <img src={creating} alt="creating" />
+        <FadeLoader color="#000000" />
         <p>Loading...</p>
       </div>
     );
