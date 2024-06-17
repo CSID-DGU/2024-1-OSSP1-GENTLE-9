@@ -23,6 +23,7 @@ function App() {
           <Route path="/create" element={<Create />} />
           <Route path="/creating" element={<Creating />} />
           <Route path="/result" element={<Result />} />
+          <Route path="/result/:id" element={<Result />} />
           <Route path="/user" element={<User />} />
         </Routes>
         <Footer />

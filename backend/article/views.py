@@ -1,16 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Article, Scrape
-from django.shortcuts import get_object_or_404
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from .analyzer import analyze_url
 from .cloud import create_cloud
 from .scrape import scrape_article, summary
-from .serializers import UrlSerializer, ScrapeSerializer
-from rest_framework.permissions import IsAuthenticated
+from .serializers import UrlSerializer
+
 
 
 class AnalyzeURL(APIView):
@@ -34,8 +32,8 @@ class AnalyzeURL(APIView):
                 "title": scrape["title"],
                 "summary": summary_result,
                 "date": scrape["date"],
-                "cloud_image": cloud["cloud"],
-                "analysis_image": article_data["analysis"],
+                "cloud": cloud["cloud"],
+                "analysis": article_data["analysis"],
                 "isscrape": article_data["isscrape"],
                 "url": url
             }
@@ -45,27 +43,3 @@ class AnalyzeURL(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-class ArticleDetail(APIView):
-    def get(self, request, id):
-        article = get_object_or_404(Article, pk=id)
-
-        response_data = {
-            "id": article.id,
-            "title": article.title,
-            "summary": article.summary,
-            "date": article.date.isoformat(),
-            "cloud": article.cloud,  # 데이터베이스에서 가져온 Base64 인코딩된 이미지 데이터
-            "analysis": article.analysis,  # 데이터베이스에서 가져온 Base64 인코딩된 이미지 데이터
-            "isscrape": article.isscrape,
-        }
-        return Response(response_data)
-
-@method_decorator(csrf_exempt, name='dispatch')
-class UserScrapesView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        user = request.user
-        scrapes = Scrape.objects.filter(user=user)
-        serializer = ScrapeSerializer(scrapes, many=True)
-        return Response(serializer.data)
