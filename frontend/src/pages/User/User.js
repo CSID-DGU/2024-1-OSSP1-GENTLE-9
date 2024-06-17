@@ -4,36 +4,13 @@ import styles from "./User.module.css";
 import axios from "axios";
 
 function User() {
-  const [articles, setArticles] = useState([]);
   const [bookmarks, setBookmarks] = useState([]);
   const [error, setError] = useState(null);
+  const token = localStorage.getItem("token");
+  console.log("Request user info with token:", token);
 
   // 사용자 저장된 기사 가져오기 함수
   useEffect(() => {
-    async function fetchArticles() {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          throw new Error("No token found");
-        }
-
-        const response = await axios.get(
-          "http://localhost:8000/api/article/scrape/",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true, // 쿠키를 포함한 요청
-          }
-        );
-
-        const scrapedArticles = response.data.map((scrape) => scrape.article);
-        setArticles(scrapedArticles);
-      } catch (error) {
-        console.error("Error fetching articles:", error);
-      }
-    }
-
     async function fetchBookmarks() {
       try {
         const token = localStorage.getItem("token");
@@ -41,11 +18,14 @@ function User() {
           throw new Error("No token found");
         }
 
-        const response = await axios.get("http://localhost:8000/accounts/bookmarks/list/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:8000/accounts/bookmarks/list/",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         setBookmarks(response.data);
       } catch (error) {
@@ -53,8 +33,6 @@ function User() {
         console.error("Error fetching bookmarks:", error);
       }
     }
-
-    fetchArticles();
     fetchBookmarks();
   }, []);
 
@@ -81,7 +59,9 @@ function User() {
 
       if (response.data.status === "bookmark removed") {
         alert("Bookmark removed successfully");
-        setBookmarks(bookmarks.filter((bookmark) => bookmark.id !== bookmarkId));
+        setBookmarks(
+          bookmarks.filter((bookmark) => bookmark.id !== bookmarkId)
+        );
       } else {
         alert("Bookmark added successfully");
       }
@@ -101,12 +81,12 @@ function User() {
         <p className={styles.title}>마이페이지</p>
         <hr />
         <div className={styles.article_container}>
-          {articles.map((article) => (
-            <Article key={article.id} {...article} />
+          {bookmarks.map((bookmark) => (
+            <Article key={bookmark.id} {...bookmark} />
           ))}
         </div>
         <hr />
-        <div className={styles.bookmark_container}>
+        {/* <div className={styles.bookmark_container}>
           <p className={styles.subtitle}>북마크된 기사</p>
           {bookmarks.map((bookmark) => (
             <div key={bookmark.id} className={styles.bookmark}>
@@ -129,7 +109,7 @@ function User() {
               </button>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -7,7 +7,10 @@ class Bookmark(models.Model):
     url = models.URLField()
     title = models.CharField(max_length=255)
     summary = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
+    cloud = models.TextField(null=True, blank=True)  # Base64 인코딩된 이미지
+    analysis = models.TextField(null=True, blank=True)  # Base64 인코딩된 이미지
+    isscrape = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title

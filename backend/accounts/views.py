@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .models import Bookmark
 from .serializers import BookmarkSerializer
+from django.shortcuts import get_object_or_404
 
 @method_decorator(csrf_exempt,name ='dispatch')
 class KakaoLogin(APIView):
@@ -89,19 +90,6 @@ class CurrentUserView(APIView):
         }
         return Response(response_data)
     
-class UserProfile(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        user = request.user
-        data = {
-            'username': user.username,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email,
-        }
-        return JsonResponse(data)
-    
 class BookmarkToggle(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -109,12 +97,15 @@ class BookmarkToggle(APIView):
         url = request.data.get('url')
         title = request.data.get('title')
         summary = request.data.get('summary')
+        date = request.data.get('date')
+        cloud = request.data.get('cloud')
+        analysis = request.data.get('analysis')
 
         # 해당 URL의 북마크가 있는지 확인
         bookmark, created = Bookmark.objects.get_or_create(
             user=request.user,
             url=url,
-            defaults={'title': title, 'summary': summary}
+            defaults={'title': title, 'summary': summary, 'date':date, 'cloud':cloud, 'analysis':analysis}
         )
 
         if not created:
@@ -131,4 +122,12 @@ class BookmarkList(APIView):
     def get(self, request):
         bookmarks = Bookmark.objects.filter(user=request.user)
         serializer = BookmarkSerializer(bookmarks, many=True)
+        return Response(serializer.data)
+    
+class BookmarkData(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        bookmark = get_object_or_404(Bookmark, pk=pk, user=request.user)
+        serializer = BookmarkSerializer(bookmark)
         return Response(serializer.data)
