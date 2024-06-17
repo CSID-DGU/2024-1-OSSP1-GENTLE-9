@@ -4,11 +4,14 @@ import styles from "./User.module.css";
 import axios from "axios";
 
 function User() {
-  const [articles, setArticles] = useState([]);
+  const [bookmarks, setBookmarks] = useState([]);
+  const [error, setError] = useState(null);
+  const token = localStorage.getItem("token");
+  console.log("Request user info with token:", token);
 
   // 사용자 저장된 기사 가져오기 함수
   useEffect(() => {
-    async function fetchArticles() {
+    async function fetchBookmarks() {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
@@ -16,24 +19,61 @@ function User() {
         }
 
         const response = await axios.get(
-          "http://localhost:8000/api/article/scrape/",
+          "http://localhost:8000/accounts/bookmarks/list/",
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-            withCredentials: true, // 쿠키를 포함한 요청
           }
         );
 
-        const scrapedArticles = response.data.map((scrape) => scrape.article);
-        setArticles(scrapedArticles);
+        setBookmarks(response.data);
       } catch (error) {
-        console.error("Error fetching articles:", error);
+        setError("Failed to fetch bookmarks.");
+        console.error("Error fetching bookmarks:", error);
       }
     }
-
-    fetchArticles();
+    fetchBookmarks();
   }, []);
+
+  const handleBookmarkToggle = async (bookmarkId, url, title, summary) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No token found");
+      }
+
+      const response = await axios.post(
+        "http://localhost:8000/accounts/bookmarks/",
+        {
+          url: url,
+          title: title,
+          summary: summary,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.status === "bookmark removed") {
+        alert("Bookmark removed successfully");
+        setBookmarks(
+          bookmarks.filter((bookmark) => bookmark.id !== bookmarkId)
+        );
+      } else {
+        alert("Bookmark added successfully");
+      }
+    } catch (error) {
+      setError("Failed to toggle bookmark.");
+      console.error("Error toggling bookmark:", error);
+    }
+  };
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div className={styles.container}>
@@ -41,10 +81,11 @@ function User() {
         <p className={styles.title}>마이페이지</p>
         <hr />
         <div className={styles.article_container}>
-          {articles.map((article) => (
-            <Article key={article.id} {...article} />
+          {bookmarks.map((bookmark) => (
+            <Article key={bookmark.id} {...bookmark} />
           ))}
         </div>
+        <hr />
       </div>
     </div>
   );

@@ -4,6 +4,15 @@ import star_y from "../assets/images/star_y.png";
 import star_g from "../assets/images/star_g.png";
 
 const useScrape = (initialScrapeStatus, articleId) => {
+  const token = localStorage.getItem("token");
+  console.log("Request user info with token:", token);
+
+  const axiosInstance = axios.create({
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
   const [isScraped, setIsScraped] = useState(initialScrapeStatus);
   const [starImage, setStarImage] = useState(
     initialScrapeStatus ? star_y : star_g
@@ -20,8 +29,8 @@ const useScrape = (initialScrapeStatus, articleId) => {
 
     if (newScrapeStatus) {
       // 스크랩 추가
-      axios
-        .post("/api/scrape", { articleId })
+      axiosInstance
+        .post("/accounts/bookmarks/", { articleId })
         .then((response) => {
           console.log("Scrape added:", response.data);
         })
@@ -30,7 +39,7 @@ const useScrape = (initialScrapeStatus, articleId) => {
         });
     } else {
       // 스크랩 삭제
-      axios
+      axiosInstance
         .delete(`/api/scrape/${articleId}`)
         .then((response) => {
           console.log("Scrape removed:", response.data);

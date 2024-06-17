@@ -1,15 +1,3 @@
-# from django.shortcuts import render, redirect
-# import requests
-# from django.conf import settings
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework.permissions import AllowAny
-# from django.contrib.auth import login
-# from django.contrib.auth.models import User
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework_simplejwt.tokens import RefreshToken
-# from django.views.decorators.csrf import csrf_exempt
-# from django.utils.decorators import method_decorator
 from django.shortcuts import redirect
 import requests
 from django.conf import settings
@@ -21,9 +9,13 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from rest_framework.response import Response
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from .models import Bookmark
+from .serializers import BookmarkSerializer
+from django.shortcuts import get_object_or_404
 
 @method_decorator(csrf_exempt,name ='dispatch')
-
 class KakaoLogin(APIView):
     permission_classes = [AllowAny]
 
@@ -86,8 +78,6 @@ class KakaoCallback(APIView):
         # 로그인 후 클라이언트의 메인 페이지로 리디렉션하면서 토큰 전달
         response = redirect(f'http://localhost:3000/?token={access_token}')
         return response
-
-
     
 class CurrentUserView(APIView):
     permission_classes = [IsAuthenticated]
@@ -99,3 +89,45 @@ class CurrentUserView(APIView):
             'first_name': user.first_name,
         }
         return Response(response_data)
+    
+class BookmarkToggle(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        url = request.data.get('url')
+        title = request.data.get('title')
+        summary = request.data.get('summary')
+        date = request.data.get('date')
+        cloud = request.data.get('cloud')
+        analysis = request.data.get('analysis')
+
+        # 해당 URL의 북마크가 있는지 확인
+        bookmark, created = Bookmark.objects.get_or_create(
+            user=request.user,
+            url=url,
+            defaults={'title': title, 'summary': summary, 'date':date, 'cloud':cloud, 'analysis':analysis}
+        )
+
+        if not created:
+            # 이미 북마크가 존재하면 삭제
+            bookmark.delete()
+            return Response({'status': 'bookmark removed'}, status=200)
+        else:
+            # 새로 생성된 경우 북마크 추가
+            return Response(BookmarkSerializer(bookmark).data, status=201)
+
+class BookmarkList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        bookmarks = Bookmark.objects.filter(user=request.user)
+        serializer = BookmarkSerializer(bookmarks, many=True)
+        return Response(serializer.data)
+    
+class BookmarkData(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        bookmark = get_object_or_404(Bookmark, pk=pk, user=request.user)
+        serializer = BookmarkSerializer(bookmark)
+        return Response(serializer.data)
