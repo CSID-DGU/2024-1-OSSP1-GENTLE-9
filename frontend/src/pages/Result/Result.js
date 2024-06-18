@@ -154,7 +154,7 @@ function Result() {
             <p className={styles.summary}>{article.summary}</p>
           </div>
           <div className={styles.content_right}>
-            <div className={styles.title}>언론사별 성향 분석표</div>
+            <div className={styles.title}>정치 성향 분석표</div>
             {article.analysis && (
               <img
                 className={styles.image2}
