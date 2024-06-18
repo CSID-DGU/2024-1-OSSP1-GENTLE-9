@@ -30,6 +30,7 @@ function Result() {
         .then((response) => {
           console.log("URL 전송 성공:");
           setArticle(response.data);
+          console.log(response.data);
           setIsBookmarked(false);
         })
         .catch((error) => {
@@ -147,7 +148,7 @@ function Result() {
             {article.analysis_image && (
               <img
                 className={styles.image1}
-                src={`data:image/png;base64,${article.analysis_image}`}
+                src={`data:image/png;base64,${article.analysis}`}
                 alt="analysis"
               />
             )}
