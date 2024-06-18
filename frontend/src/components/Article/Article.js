@@ -5,7 +5,7 @@ import styles from "./Article.module.css";
 import axios from "axios";
 import starImage from "../../assets/images/star_y.png";
 
-function Article({ id, title, date, cloud, analysis }) {
+function Article({ id, url, title, summary, date, cloud, analysis }) {
   const navigate = useNavigate();
   const [bookmarks, setBookmarks] = useState([]);
   const [error, setError] = useState(null);
@@ -15,18 +15,12 @@ function Article({ id, title, date, cloud, analysis }) {
     month: "long",
     day: "numeric",
   });
+
   const handleArticleClick = () => {
     navigate(`/result/${id}`);
   };
-  const handleBookmarkToggle = async (
-    bookmarkId,
-    url,
-    title,
-    summary,
-    date,
-    cloud_image,
-    analysis_image
-  ) => {
+
+  const handleBookmarkToggle = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -36,12 +30,12 @@ function Article({ id, title, date, cloud, analysis }) {
       const response = await axios.post(
         "http://localhost:8000/accounts/bookmarks/",
         {
-          url: url,
+          url: url, // 현재 페이지 URL 사용
           title: title,
-          summary: summary,
+          summary: summary, // summary가 없는 경우 빈 문자열 사용
           date: date,
-          cloud: cloud_image,
-          analysis: analysis_image,
+          cloud: cloud,
+          analysis: analysis,
         },
         {
           headers: {
@@ -52,9 +46,7 @@ function Article({ id, title, date, cloud, analysis }) {
 
       if (response.data.status === "bookmark removed") {
         alert("Bookmark removed successfully");
-        setBookmarks(
-          bookmarks.filter((bookmark) => bookmark.id !== bookmarkId)
-        );
+        setBookmarks(bookmarks.filter((bookmark) => bookmark.id !== id));
       } else {
         alert("Bookmark added successfully");
       }
@@ -63,20 +55,24 @@ function Article({ id, title, date, cloud, analysis }) {
       console.error("Error toggling bookmark:", error);
     }
   };
+
   return (
     <div className={styles.container} onClick={handleArticleClick}>
       <div className={styles.star_container}>
         <img
           src={starImage}
           alt="star"
-          onClick={handleBookmarkToggle}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleBookmarkToggle();
+          }}
           style={{ cursor: "pointer" }}
         />
       </div>
-      <div className={styles.image_container} onClick={handleArticleClick}>
+      <div className={styles.image_container}>
         <img src={`data:image/png;base64,${cloud}`} alt="cloud" />
       </div>
-      <div className={styles.contents_container} onClick={handleArticleClick}>
+      <div className={styles.contents_container}>
         <div className={styles.title}>{title}</div>
         <div className={styles.date}>{formattedDate}</div>
         <div className={styles.leanings}>{/* {publisher}({leanings}) */}</div>

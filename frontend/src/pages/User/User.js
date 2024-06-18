@@ -36,40 +36,7 @@ function User() {
     fetchBookmarks();
   }, []);
 
-  const handleBookmarkToggle = async (bookmarkId, url, title, summary) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("No token found");
-      }
-
-      const response = await axios.post(
-        "http://localhost:8000/accounts/bookmarks/",
-        {
-          url: url,
-          title: title,
-          summary: summary,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.data.status === "bookmark removed") {
-        alert("Bookmark removed successfully");
-        setBookmarks(
-          bookmarks.filter((bookmark) => bookmark.id !== bookmarkId)
-        );
-      } else {
-        alert("Bookmark added successfully");
-      }
-    } catch (error) {
-      setError("Failed to toggle bookmark.");
-      console.error("Error toggling bookmark:", error);
-    }
-  };
+ 
 
   if (error) {
     return <div>{error}</div>;

@@ -2,9 +2,7 @@ import styles from "./Result.module.css";
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
-import useScrape from "../../hooks/useScrape";
 import date from "../../assets/images/date.png";
-import creating from "../../assets/images/creating.png";
 import starFilled from "../../assets/images/star_y.png"; // 채워진 별 이미지
 import starEmpty from "../../assets/images/star_g.png"; // 빈 별 이미지
 import FadeLoader from "react-spinners/FadeLoader";
@@ -18,10 +16,7 @@ function Result() {
   const { id } = useParams();
   const url = query.get("url"); // 쿼리 파라미터에서 url을 가져온다.
   const [article, setArticle] = useState(null);
-  const { isScraped, starImage, toggleScrape, setScrapeStatus } = useScrape(
-    article ? article.isscrape : 0,
-    article ? article.id : null
-  );
+
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [error, setError] = useState(null);
 
@@ -43,8 +38,7 @@ function Result() {
         .then((response) => {
           console.log("URL 전송 성공:");
           setArticle(response.data);
-          setScrapeStatus(response.data.isscrape);
-          setIsBookmarked(response.data.isscrape);
+          setIsBookmarked(false);
         })
         .catch((error) => {
           console.error("기사 가져오기 오류:", error);
@@ -60,7 +54,6 @@ function Result() {
         .then((response) => {
           console.log("ID로 기사 가져오기 성공:");
           setArticle(response.data);
-          setScrapeStatus(response.data.isscrape);
           setIsBookmarked(true);
         })
         .catch((error) => {
@@ -68,7 +61,7 @@ function Result() {
           alert("기사를 가져오는 데 실패했습니다. 다시 시도해 주세요.");
         });
     }
-  }, [url, id, setScrapeStatus]);
+  }, [url, id]);
 
   const handleBookmark = async () => {
     try {
@@ -77,22 +70,28 @@ function Result() {
         throw new Error("No token found");
       }
 
+      const requestData = {
+        url: article.url,
+        title: article.title,
+        summary: article.summary,
+        date: article.date,
+        cloud: article.cloud,
+        analysis: article.analysis,
+      };
+
+      console.log("Request data:", requestData);
+
       const response = await axios.post(
         "http://localhost:8000/accounts/bookmarks/",
-        {
-          url: url,
-          title: article.title,
-          summary: article.summary,
-          date: article.date,
-          cloud: article.cloud,
-          analysis: article.analysis,
-        },
+        requestData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+
+      console.log("Server response:", response.data);
 
       if (response.data.status === "bookmark removed") {
         alert("Bookmark removed successfully");
@@ -104,6 +103,9 @@ function Result() {
     } catch (error) {
       setError("Failed to add bookmark.");
       console.error("Error adding bookmark:", error);
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+      }
     }
   };
 
