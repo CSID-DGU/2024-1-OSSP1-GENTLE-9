@@ -1,3 +1,8 @@
+import pickle
+import os
+import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+import joblib 
 # import torch
 # from sklearn.feature_extraction.text import TfidfVectorizer
 # from transformers import DistilBertTokenizer, DistilBertModel 
@@ -9,7 +14,7 @@
     
 #     # 모델 파일을 불러옴
 #     with open(view_model_path, 'rb') as model_file:
-#         view_model = pickle.load(model_file)
+#         view_model = joblib.load(model_file)
 #     with open(tendency_model_path, 'rb') as model_file:
 #         tendency_model = pickle.load(model_file)
     
@@ -35,7 +40,7 @@ def analyze_url(url):
 
     # # 관점 분석
     # input = vectorizer.fit_transform(news_title)
-    # view_score = view_model(input)
+    # view_score = view_model.predict(input)
     
     # article_view = "기사 관점"
     # if -1 <= view_score < -0.4:
