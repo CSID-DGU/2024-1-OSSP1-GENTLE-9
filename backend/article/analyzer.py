@@ -341,7 +341,6 @@ def analyze_url(url):
     with open(analysis_image_path, "rb") as image_file:
         analysis_image = base64.b64encode(image_file.read()).decode('utf-8')
 
-
     # 결과 반환
     return {
         "analysis": analysis_image,

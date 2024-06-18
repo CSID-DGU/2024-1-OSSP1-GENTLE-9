@@ -102,6 +102,12 @@ hr {
   width: 80%;
   height: auto;
 }
+.image2 {
+  margin-top: 20px;
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
 
 .creating_container {
   width: 100%;

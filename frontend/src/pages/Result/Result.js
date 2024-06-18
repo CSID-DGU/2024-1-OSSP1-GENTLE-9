@@ -117,7 +117,17 @@ function Result() {
       </div>
     );
   }
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
 
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
   return (
     <div className={styles.container_wrapper}>
       <div className={styles.container}>
@@ -127,7 +137,7 @@ function Result() {
         <div className={styles.middle}>
           <div className={styles.date}>
             <img src={date} alt="date" />
-            <p>{article.date}</p>
+            <p>{formatDate(article.date)}</p>
           </div>
           <img
             src={isBookmarked ? starFilled : starEmpty}
@@ -145,9 +155,9 @@ function Result() {
           </div>
           <div className={styles.content_right}>
             <div className={styles.title}>언론사별 성향 분석표</div>
-            {article.analysis_image && (
+            {article.analysis && (
               <img
-                className={styles.image1}
+                className={styles.image2}
                 src={`data:image/png;base64,${article.analysis}`}
                 alt="analysis"
               />
