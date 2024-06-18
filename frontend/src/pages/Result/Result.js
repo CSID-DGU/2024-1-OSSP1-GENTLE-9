@@ -26,15 +26,7 @@ function Result() {
     if (url) {
       console.log("URL 전송 시도:", url);
       axios
-        .post(
-          "http://127.0.0.1:8000/api/article/result/",
-          { url: url },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        .post("http://127.0.0.1:8000/api/article/result/", { url: url })
         .then((response) => {
           console.log("URL 전송 성공:");
           setArticle(response.data);
