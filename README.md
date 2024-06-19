@@ -15,7 +15,8 @@ Word Cloud 라이브러리 - 워드 클라우드 시각화
 [기사 키워드 추출](https://docs.kakaocloud.com/service/ai-service/nlp/keyword-extract/api/nlp-keyword-extract-api) - 뉴스 기사 내 키워드 추출 api  
 
 ## 기능
-<img src="img/6.png>
+![6](https://github.com/CSID-DGU/2024-1-OSSP1-GENTLE-9/assets/162854143/c2b1408e-1f17-4153-84e6-5fd9a0b6d796)
+
 
 ## 팀원
 ◦ 팀장: 동국대학교 컴퓨터공학과 정지우  
