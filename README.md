@@ -6,8 +6,7 @@
 'GENTLE' 프로젝트는 이러한 사회 문제를 해결하기 위해 편향성이 제거된 객관적 정보를 제공하는 서비스와, 그에 따라 사용자들이 편향적 정보가 제거된 객관적 정보를 균형 있게 이해하고 현명한 의사 결정을 할 수 있도록 중립적 기사 제공을 목적으로 한다.
 
 ## 사용 오픈소스 
-[KPF-BERT](https://github.com/KPFBERT/kpfbert) - 키워드 추출  
-[Text-Data_Analysis-Project](https://towardsdatascience.com/organizing-your-first-text-analytics-project-ce350dea3a4a) - 문장 토큰화  
+[KPF-BERT](https://github.com/KPFBERT/kpfbert) - 뉴스 데이터로 학습한 한국언론진흥재단의 BERT 언어모델
 Word Cloud 라이브러리 - 워드 클라우드 시각화  
 [카카오 로그인](https://github.com/Showmil/Kakao-Login) - 로그인 기능  
 [크롤링](https://github.com/sbomhoo/naver_news_crawling) - 네이버 뉴스에서 기사 호출  
