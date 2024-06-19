@@ -17,8 +17,10 @@ Word Cloud 라이브러리 - 워드 클라우드 시각화
 
 ## 기능
 ![6](https://github.com/CSID-DGU/2024-1-OSSP1-GENTLE-9/assets/162854143/c2b1408e-1f17-4153-84e6-5fd9a0b6d796)    
+  
 마이 페이지  
 ![KakaoTalk_Photo_2024-06-19-17-43-01](https://github.com/CSID-DGU/2024-1-OSSP1-GENTLE-9/assets/162854143/1b1a0964-b293-43d2-acf9-e695d5de9ca2)  
+  
 기사 요약 페이지  
 ![KakaoTalk_Photo_2024-06-19-18-09-02](https://github.com/CSID-DGU/2024-1-OSSP1-GENTLE-9/assets/162854143/fb22bf41-4b92-46f8-9b35-db66b250afb5)
 
